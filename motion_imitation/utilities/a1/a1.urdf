@@ -14,7 +14,10 @@
     <color rgba="0.0 0.8 0.0 1.0"/>
   </material>
   <material name="grey">
-    <color rgba="0.2 0.2 0.2 1.0"/>
+    <color rgba="0.6 0.6 0.6 1.0"/>
+  </material>
+  <material name="light-grey">
+    <color rgba="0.8 0.8 0.8 1.0"/>
   </material>
   <material name="silver">
     <color rgba="0.913725490196 0.913725490196 0.847058823529 1.0"/>
@@ -37,7 +40,7 @@
       <geometry>
         <mesh filename="meshes/trunk.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -47,7 +50,8 @@
     </collision>
     <inertial>
       <origin rpy="0 0 0" xyz="0.012731 0.002186 0.000515"/>
-      <mass value="4.713"/>
+      <!--  <mass value="4.713"/>  -->
+      <mass value="8"/>
       <inertia ixx="0.01683993" ixy="8.3902e-05" ixz="0.000597679" iyy="0.056579028" iyz="2.5134e-05" izz="0.064713601"/>
     </inertial>
     <visual>
@@ -102,7 +106,7 @@
       <geometry>
         <mesh filename="meshes/hip.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
@@ -149,7 +153,7 @@
       <geometry>
         <mesh filename="meshes/thigh_mirror.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -177,7 +181,7 @@
       <geometry>
         <mesh filename="meshes/calf.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -202,7 +206,7 @@
       <geometry>
         <sphere radius="0.01"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -259,7 +263,7 @@
       <geometry>
         <mesh filename="meshes/hip.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
@@ -306,7 +310,7 @@
       <geometry>
         <mesh filename="meshes/thigh.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -334,7 +338,7 @@
       <geometry>
         <mesh filename="meshes/calf.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -359,7 +363,7 @@
       <geometry>
         <sphere radius="0.01"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -416,7 +420,7 @@
       <geometry>
         <mesh filename="meshes/hip.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
@@ -463,7 +467,7 @@
       <geometry>
         <mesh filename="meshes/thigh_mirror.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -491,7 +495,7 @@
       <geometry>
         <mesh filename="meshes/calf.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -516,7 +520,7 @@
       <geometry>
         <sphere radius="0.01"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -573,7 +577,7 @@
       <geometry>
         <mesh filename="meshes/hip.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
@@ -620,7 +624,7 @@
       <geometry>
         <mesh filename="meshes/thigh.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -648,7 +652,7 @@
       <geometry>
         <mesh filename="meshes/calf.obj" scale="1 1 1"/>
       </geometry>
-      <material name="orange"/>
+      <material name="light-grey"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1"/>
@@ -673,7 +677,7 @@
       <geometry>
         <sphere radius="0.01"/>
       </geometry>
-      <material name="orange"/>
+      <material name="grey"/>
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>

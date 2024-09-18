@@ -264,9 +264,14 @@ def retarget_pose(robot, default_pose, ref_joint_pos):
   return pose
 
 def update_camera(robot):
-  base_pos = np.array(pybullet.getBasePositionAndOrientation(robot)[0])
-  [yaw, pitch, dist] = pybullet.getDebugVisualizerCamera()[8:11]
-  pybullet.resetDebugVisualizerCamera(dist, yaw, pitch, base_pos)
+  #base_pos = np.array(pybullet.getBasePositionAndOrientation(robot)[0])
+  #[yaw, pitch, dist] = pybullet.getDebugVisualizerCamera()[8:11]
+  #pybullet.resetDebugVisualizerCamera(dist, yaw, pitch, base_pos)
+  camera_distance = 5.0
+  camera_yaw = 0
+  camera_pitch = -30
+  camera_target_position = [0, 0, 0]
+  pybullet.resetDebugVisualizerCamera(camera_distance, camera_yaw, camera_pitch, camera_target_position)
   return
 
 def load_ref_data(JOINT_POS_FILENAME, FRAME_START, FRAME_END):
@@ -383,7 +388,7 @@ def main():
       set_pose(robot, pose)
       set_maker_pos(ref_joint_pos, marker_ids)
 
-      update_camera(robot)
+      update_camera()
       p.configureDebugVisualizer(p.COV_ENABLE_SINGLE_STEP_RENDERING,1)
       f += 1
 

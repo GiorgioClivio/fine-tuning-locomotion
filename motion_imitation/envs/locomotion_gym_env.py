@@ -111,9 +111,9 @@ class LocomotionGymEnv(gym.Env):
           pybullet.COV_ENABLE_GUI,
           gym_config.simulation_parameters.enable_rendering_gui)
       if hasattr(self._task, '_draw_ref_model_alpha'):
-        self._show_reference_id = pybullet.addUserDebugParameter("show reference",0,1,
-          self._task._draw_ref_model_alpha)
-      self._delay_id = pybullet.addUserDebugParameter("delay",0,0.3,0)
+          self._show_reference_id = pybullet.addUserDebugParameter("show reference", 0, 1, self._task._draw_ref_model_alpha)
+      self._delay_id = pybullet.addUserDebugParameter("delay", 0, 0.3, 0)
+      
     else:
       self._pybullet_client = bullet_client.BulletClient(
           connection_mode=pybullet.DIRECT)
@@ -196,7 +196,7 @@ class LocomotionGymEnv(gym.Env):
   def reset(self,
             initial_motor_angles=None,
             reset_duration=0.0,
-            reset_visualization_camera=True):
+            reset_visualization_camera=False):
     """Resets the robot's position in the world or rebuild the sim world.
 
     The simulation world will be rebuilt if self._hard_reset is True.
@@ -322,65 +322,97 @@ class LocomotionGymEnv(gym.Env):
     self._last_action = action
 
     if self._is_render:
-      # Sleep, otherwise the computation takes less time than real time,
-      # which will make the visualization like a fast-forward video.
-      time_spent = time.time() - self._last_frame_time
-      self._last_frame_time = time.time()
-      time_to_sleep = self._env_time_step - time_spent
-      if time_to_sleep > 0:
-        time.sleep(time_to_sleep)
-      base_pos = self._robot.GetBasePosition()
+        # Sleep, otherwise the computation takes less time than real time,
+        # which will make the visualization like a fast-forward video.
+        time_spent = time.time() - self._last_frame_time
+        self._last_frame_time = time.time()
+        time_to_sleep = self._env_time_step - time_spent
+        if time_to_sleep > 0:
+            time.sleep(time_to_sleep)
 
-      # Also keep the previous orientation of the camera set by the user.
-      [yaw, pitch,
-       dist] = self._pybullet_client.getDebugVisualizerCamera()[8:11]
-      self._pybullet_client.resetDebugVisualizerCamera(dist, yaw, pitch,
-                                                       base_pos)
-      self._pybullet_client.configureDebugVisualizer(
-          self._pybullet_client.COV_ENABLE_SINGLE_STEP_RENDERING, 1)
-      alpha = 0.5
-      if self._show_reference_id>0:
-        alpha = self._pybullet_client.readUserDebugParameter(self._show_reference_id)
+        # Keep the camera fixed. Set a fixed position, yaw, and pitch.
+        fixed_camera_position = [1, 1, 1]  # Fixed position (x, y, z)
+        fixed_camera_target = [0, 0, 0]    # Fixed target (x, y, z)
+        fixed_camera_yaw = 30              # Fixed yaw angle
+        fixed_camera_pitch = -30           # Fixed pitch angle
+        fixed_camera_distance = np.linalg.norm(np.array(fixed_camera_position) - np.array(fixed_camera_target))
+        
+        # Set the camera position
+        view_matrix = self._pybullet_client.computeViewMatrixFromYawPitchRoll(
+            cameraTargetPosition=fixed_camera_target,
+            distance=fixed_camera_distance,
+            yaw=fixed_camera_yaw,
+            pitch=fixed_camera_pitch,
+            roll=0,
+            upAxisIndex=2
+        )
+        proj_matrix = self._pybullet_client.computeProjectionMatrixFOV(
+            fov=60,
+            aspect=float(self._render_width) / self._render_height,
+            nearVal=0.1,
+            farVal=100.0
+        )
+        # Render the image with the fixed camera position
+        (_, _, px, _, _) = self._pybullet_client.getCameraImage(
+            width=self._render_width,
+            height=self._render_height,
+            renderer=self._pybullet_client.ER_BULLET_HARDWARE_OPENGL,
+            viewMatrix=view_matrix,
+            projectionMatrix=proj_matrix
+        )
+        rgb_array = np.array(px)
+        rgb_array = rgb_array[:, :, :3]
 
-      ref_col = [1, 1, 1, alpha]
-      if hasattr(self._task, '_ref_model'):
-        self._pybullet_client.changeVisualShape(self._task._ref_model, -1, rgbaColor=ref_col)
-        for l in range (self._pybullet_client.getNumJoints(self._task._ref_model)):
-               self._pybullet_client.changeVisualShape(self._task._ref_model, l, rgbaColor=ref_col)
+        # Optional: Show reference model
+        if self._show_reference_id > 0:
+            alpha = self._pybullet_client.readUserDebugParameter(self._show_reference_id)
+            ref_col = [1, 1, 1, alpha]
+            if hasattr(self._task, '_ref_model'):
+                self._pybullet_client.changeVisualShape(self._task._ref_model, -1, rgbaColor=ref_col)
+                for l in range(self._pybullet_client.getNumJoints(self._task._ref_model)):
+                    self._pybullet_client.changeVisualShape(self._task._ref_model, l, rgbaColor=ref_col)
 
-      delay = self._pybullet_client.readUserDebugParameter(self._delay_id)
-      if (delay>0):
-        time.sleep(delay)
+        delay = self._pybullet_client.readUserDebugParameter(self._delay_id)
+        if delay > 0:
+            time.sleep(delay)
 
+    # Randomize the environment if needed
     for env_randomizer in self._env_randomizers:
-      env_randomizer.randomize_step(self)
+        env_randomizer.randomize_step(self)
 
-    # robot class and put the logics here.
+    # Step the robot
     self._robot.Step(action)
 
+    # Update sensors
     for s in self.all_sensors():
-      s.on_step(self)
+        s.on_step(self)
 
+    # Update the task if applicable
     if self._task and hasattr(self._task, 'update'):
-      self._task.update(self)
+        self._task.update(self)
 
+    # Compute reward
     reward = self._reward()
 
+    # Check if the episode is done
     done = self._termination()
     self._env_step_counter += 1
     if done:
-      self._robot.Terminate()
+        self._robot.Terminate()
+
     return self._get_observation(), reward, done, {}
+    
 
   def render(self, mode='rgb_array'):
     if mode != 'rgb_array':
       raise ValueError('Unsupported render mode:{}'.format(mode))
-    base_pos = self._robot.GetBasePosition()
+    camera_target_position = [0, 0, 0]  # Center of the world or a fixed point
+    fixed_camera_position = [1, 1, 1]   # Fixed position of the camera
     view_matrix = self._pybullet_client.computeViewMatrixFromYawPitchRoll(
-        cameraTargetPosition=base_pos,
-        distance=self._camera_dist,
-        yaw=self._camera_yaw,
-        pitch=self._camera_pitch,
+        cameraTargetPosition=camera_target_position,
+        distance=np.linalg.norm(np.array(fixed_camera_position) - np.array(camera_target_position)),
+        yaw=30,  # Fixed yaw angle
+        pitch=-30,  # Fixed pitch angle
         roll=0,
         upAxisIndex=2)
     proj_matrix = self._pybullet_client.computeProjectionMatrixFOV(

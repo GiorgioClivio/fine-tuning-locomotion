@@ -106,7 +106,8 @@ _LINK_A_FIELD_NUMBER = 3
 
 class A1Robot(a1.A1):
   """Interface for real A1 robot."""
-  MPC_BODY_MASS = 108 / 9.8
+  #MPC_BODY_MASS = 108 / 9.8
+  MPC_BODY_MASS = 78.4 / 9.8
   MPC_BODY_INERTIA = np.array((0.24, 0, 0, 0, 0.80, 0, 0, 0, 1.00))
 
   MPC_BODY_HEIGHT = 0.24

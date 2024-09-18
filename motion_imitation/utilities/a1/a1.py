@@ -7,8 +7,8 @@ p.setAdditionalSearchPath(pd.getDataPath())
 dt = 1./240.
 
 p.configureDebugVisualizer(p.COV_ENABLE_RENDERING,0)
-p.loadURDF("plane.urdf")
-robot = p.loadURDF("a1/a1.urdf",[0,0,0.5])
+p.loadURDF("plane_rough.urdf")
+robot = p.loadURDF("a1/a1.urdf",[0,0,10.5])
 p.configureDebugVisualizer(p.COV_ENABLE_RENDERING,1)
 p.setGravity(0,0,-9.8)
 

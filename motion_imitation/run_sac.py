@@ -174,6 +174,9 @@ def main():
     arg_parser.add_argument("--realistic_sim", dest="realistic_sim", action="store_true", default=False)
     arg_parser.add_argument("--mocap_grpc_server", dest="mocap_grpc_server", type=str, default=None)
     arg_parser.add_argument("--no_env_logging", dest="env_logging", action="store_false", default=True)
+    
+    # Add argument for enabling heightfield randomizer
+    arg_parser.add_argument("--enable_heightfield_randomizer", dest="enable_heightfield_randomizer", action="store_true", default=False)
 
     args = arg_parser.parse_args()
 
@@ -219,7 +222,8 @@ def main():
                                 enable_rendering=args.visualize,
                                 use_real_robot=args.real,
                                 reset_at_current_position=args.multitask,
-                                realistic_sim=args.realistic_sim)
+                                realistic_sim=args.realistic_sim,
+                                enable_heightfield_randomizer=args.enable_heightfield_randomizer)  # Added parameter
     if args.env_logging:
       env = logging_wrapper.LoggingWrapper(env, output_dir,
                                            args.mocap_grpc_server)
@@ -272,3 +276,4 @@ def main():
 
 if __name__ == '__main__':
   main()
+
